@@ -156,3 +156,27 @@ body {
   font-weight: 500;
   cursor: pointer;
 }
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+.stat-card {
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+.stat-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+}
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+}
