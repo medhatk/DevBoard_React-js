@@ -4,7 +4,7 @@ const TaskCard = ({ task, onDelete, onEdit, onStatusChange }) => {
   return (
     <div className="card mb-3 shadow-sm">
       <div className="card-body">
-        {/* عرض بيانات الـ Task */}
+      
         <h6 className="card-title fw-bold">{task.title}</h6>
         {task.description && (
           <p className="card-text text-muted small">{task.description}</p>
@@ -49,7 +49,7 @@ const TaskCard = ({ task, onDelete, onEdit, onStatusChange }) => {
           </select>
         </div>
 
-        {/* Edit / Delete UI */}
+        
         <div className="d-flex gap-2">
           <button
             className="btn btn-sm btn-outline-primary w-50"
