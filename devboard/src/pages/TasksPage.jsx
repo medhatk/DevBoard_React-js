@@ -35,8 +35,8 @@ const TasksPage = () => {
 
       {tasks.length === 0 && !editingTask ? (
         <div className="text-center py-5 border rounded bg-light mt-4">
-          <h4> لا يوجد مهام حالياً</h4>
-          <p className="text-muted">Empty State - ابدأ بإضافة أول Task</p>
+          <h4>Nothing ToDo Now </h4>
+          <p className="text-muted">Empty State - Add your first Task</p>
         </div>
       ) : (
         <div className="row mt-4">
