@@ -1,77 +1,41 @@
 import { useState } from "react";
+import { BookOpen, Check, Clipboard, Trash2 } from "lucide-react";
 
 function SnippetCard({ snippet, onDelete }) {
   const [copied, setCopied] = useState(false);
 
-  function copyCode() {
-    navigator.clipboard.writeText(snippet.code);
-
-    setCopied(true);
-
-    setTimeout(() => {
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(snippet.code);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
       setCopied(false);
-    }, 2000);
+    }
   }
 
   return (
-    <div className="card h-100">
-      <div className="card-body">
-
-        <div className="d-flex justify-content-between align-items-start mb-2">
-          <h5 className="card-title">
-            {snippet.title}
-          </h5>
-
-          <button
-            className="btn btn-sm btn-danger"
-            onClick={() => onDelete(snippet.id)}
-          >
-            Delete
-          </button>
+    <article className="snippet-card">
+      <header className="snippet-card-heading">
+        <div className="snippet-card-title-wrap">
+          <h2>{snippet.title}</h2>
+          <div className="snippet-card-tags">
+            {snippet.language && <span className="snippet-language-tag">{snippet.language}</span>}
+            {snippet.tag && <span className="snippet-topic-tag">{snippet.tag}</span>}
+          </div>
         </div>
-
-        <div className="mb-3">
-
-          <span className="badge bg-primary me-2">
-            {snippet.language}
-          </span>
-
-          {snippet.tag && (
-            <span className="badge bg-secondary">
-              {snippet.tag}
-            </span>
-          )}
-
-        </div>
-
-        <pre className="bg-dark text-light p-3 rounded">
-          <code>{snippet.code}</code>
-        </pre>
-
-        <div className="d-flex gap-2 mt-3">
-
-          <button
-            className="btn btn-outline-primary"
-            onClick={copyCode}
-          >
-            {copied ? "Copied!" : "Copy Code"}
-          </button>
-
-          {snippet.docUrl && (
-            <a
-              href={snippet.docUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-outline-secondary"
-            >
-              Documentation
-            </a>
-          )}
-
-        </div>
-
-      </div>
-    </div>
+        <button type="button" className={`snippet-copy-button ${copied ? "copied" : ""}`} onClick={copyCode} aria-label={`Copy ${snippet.title}`} title={copied ? "Copied" : "Copy code"}>
+          {copied ? <Check /> : <Clipboard />}
+        </button>
+      </header>
+      <pre className="snippet-code"><code>{snippet.code}</code></pre>
+      <footer className="snippet-card-footer">
+        {snippet.docUrl ? (
+          <a href={snippet.docUrl} target="_blank" rel="noopener noreferrer"><BookOpen /> Documentation</a>
+        ) : <span className="snippet-no-doc"><BookOpen /> No documentation link</span>}
+        <button type="button" onClick={() => onDelete(snippet.id)} aria-label={`Delete ${snippet.title}`} title="Delete snippet"><Trash2 /></button>
+      </footer>
+    </article>
   );
 }
 
