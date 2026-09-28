@@ -3,10 +3,13 @@ import {
   LayoutDashboard,
   CheckSquare,
   Code2,
+  Moon,
   Sun,
 } from "lucide-react";
 import logoIcon from "../assets/logo-icon.png";
+import { useTheme } from "../context/ThemeContext";
 function Sidebar() {
+  const { theme, toggleTheme } = useTheme();
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
@@ -31,9 +34,10 @@ function Sidebar() {
         </NavLink>
         </nav>
         <div className="sidebar-bottom">
-          <button className="sidebar-option">
-            <Sun />
+          <button className="sidebar-option" type="button" onClick={toggleTheme} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`} aria-pressed={theme === "dark"}>
+            {theme === "dark" ? <Sun /> : <Moon />}
             <span>Appearance</span>
+            <span className="theme-mode-label">{theme === "dark" ? "Dark" : "Light"}</span>
           </button>
         </div>
     </aside>

@@ -1,69 +1,68 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const TaskForm = ({ onAddTask, onEditTask, editingTask, setEditingTask, onCancel }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    tag: "",
-    repoUrl: "",
-    status: "To Do"
-  });
+const initialFormData = {
+  title: "",
+  description: "",
+  tag: "",
+  repoUrl: "",
+  status: "To Do",
+};
+
+const TaskForm = ({ onAddTask, onEditTask, editingTask, onCancel }) => {
+  const [formData, setFormData] = useState(initialFormData);
 
   useEffect(() => {
-    if (editingTask) setFormData(editingTask);
-    else setFormData({ title: "", description: "", tag: "", repoUrl: "", status: "To Do" });
+    setFormData(editingTask || initialFormData);
   }, [editingTask]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((previous) => ({ ...previous, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.title.trim()) return alert("Title is required");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!formData.title.trim()) return;
     if (editingTask) onEditTask(formData);
-    else onAddTask({ ...formData, id: Date.now().toString() });
+    else onAddTask(formData);
   };
 
   return (
-    <div className="card mb-4 shadow-sm">
-      <div className="card-body">
-        <h5 className="card-title">{editingTask ? "Edit Task" : "Add New Task"}</h5>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Title *</label>
-            <input type="text" className="form-control" name="title" value={formData.title} onChange={handleChange} required />
+    <form className="entity-form task-form" onSubmit={handleSubmit}>
+      <div className="entity-form-fields">
+        <label className="form-field">
+          <span>Title</span>
+          <input autoFocus name="title" value={formData.title} onChange={handleChange} placeholder="e.g., Implement OAuth2 refresh token rotation" required />
+        </label>
+        <label className="form-field">
+          <span>Description</span>
+          <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Add a brief summary or acceptance criteria..." rows={3} />
+        </label>
+        <label className="form-field">
+          <span>Tag</span>
+          <input name="tag" value={formData.tag} onChange={handleChange} placeholder="Select or type a tag (e.g. backend, frontend, infra)..." />
+        </label>
+        <label className="form-field">
+          <span>Repository URL</span>
+          <input type="url" name="repoUrl" value={formData.repoUrl} onChange={handleChange} placeholder="https://github.com/org/repo" />
+        </label>
+        <fieldset className="form-field task-status-field">
+          <legend>Status</legend>
+          <div className="task-status-options">
+            {["To Do", "In Progress", "Done"].map((status) => (
+              <label className={`task-status-option ${formData.status === status ? "selected" : ""}`} key={status}>
+                <input type="radio" name="status" value={status} checked={formData.status === status} onChange={handleChange} />
+                <span className="task-status-dot" />{status}
+              </label>
+            ))}
           </div>
-          <div className="mb-3">
-            <label className="form-label">Description</label>
-            <textarea className="form-control" name="description" value={formData.description} onChange={handleChange} rows={3} />
-          </div>
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label className="form-label">Tag</label>
-              <input type="text" className="form-control" name="tag" value={formData.tag} onChange={handleChange} />
-            </div>
-            <div className="col-md-6 mb-3">
-              <label className="form-label">Status</label>
-              <select className="form-select" name="status" value={formData.status} onChange={handleChange}>
-                <option value="To Do">To Do</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Done">Done</option>
-              </select>
-            </div>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Repository Link</label>
-            <input type="url" className="form-control" name="repoUrl" value={formData.repoUrl} onChange={handleChange} placeholder="https://github.com/..." />
-          </div>
-          <div className="d-flex gap-2">
-            <button type="submit" className="btn btn-primary">{editingTask ? "Update Task" : "Add Task"}</button>
-            <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
-          </div>
-        </form>
+        </fieldset>
       </div>
-    </div>
+      <footer className="entity-form-footer">
+        <button type="button" className="form-cancel-button" onClick={onCancel}>Cancel</button>
+        <button type="submit" className="form-submit-button">{editingTask ? "Save changes" : "Create task"}</button>
+      </footer>
+    </form>
   );
 };
 

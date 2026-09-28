@@ -1,4 +1,5 @@
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Search } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -7,6 +8,8 @@ function Navbar() {
   const handleNewClick = () => {
     if (location.pathname === "/tasks") {
       window.dispatchEvent(new Event("open-new-task-form"));
+    } else if (location.pathname === "/snippets") {
+      window.dispatchEvent(new Event("open-new-snippet-form"));
     } else {
       navigate("/tasks?new=true");
     }
@@ -17,7 +20,7 @@ function Navbar() {
       <div className="topbar-search">
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search tasks and snippets..."
         />
       </div>
 
