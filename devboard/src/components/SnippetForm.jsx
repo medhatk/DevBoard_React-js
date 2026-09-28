@@ -1,107 +1,52 @@
 import { useState } from "react";
 
-function SnippetForm({ onAddSnippet }) {
-  const [title, setTitle] = useState("");
-  const [language, setLanguage] = useState("");
-  const [code, setCode] = useState("");
-  const [docUrl, setDocUrl] = useState("");
-  const [tag, setTag] = useState("");
+const emptySnippet = { title: "", language: "", code: "", docUrl: "", tag: "" };
 
-  function handleSubmit(e) {
-    e.preventDefault();
+function SnippetForm({ onAddSnippet, onCancel }) {
+  const [formData, setFormData] = useState(emptySnippet);
 
-    if (!title || !language || !code) {
-      return;
-    }
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((previous) => ({ ...previous, [name]: value }));
+  };
 
-    const snippet = {
-      title: title,
-      language: language,
-      code: code,
-      docUrl: docUrl,
-      tag: tag
-    };
-
-    onAddSnippet(snippet);
-
-    setTitle("");
-    setLanguage("");
-    setCode("");
-    setDocUrl("");
-    setTag("");
-  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!formData.title.trim() || !formData.language.trim() || !formData.code.trim()) return;
+    onAddSnippet(formData);
+    setFormData(emptySnippet);
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="card p-3 mb-4">
-      <h4 className="mb-3">Add New Snippet</h4>
-
-      <div className="mb-3">
-        <label className="form-label">Title</label>
-
-        <input
-          type="text"
-          className="form-control"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter snippet title"
-        />
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">
-          Programming Language
+    <form className="entity-form snippet-form" onSubmit={handleSubmit}>
+      <div className="entity-form-fields">
+        <label className="form-field">
+          <span>Title</span>
+          <input autoFocus name="title" value={formData.title} onChange={handleChange} placeholder="e.g., useDebounce Hook" required />
         </label>
-
-        <input
-          type="text"
-          className="form-control"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          placeholder="JavaScript"
-        />
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">Code</label>
-
-        <textarea
-          className="form-control"
-          rows="6"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="Write your code here..."
-        ></textarea>
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">
-          Documentation URL
+        <div className="form-field-row">
+          <label className="form-field">
+            <span>Programming language</span>
+            <input name="language" value={formData.language} onChange={handleChange} placeholder="e.g., TypeScript" required />
+          </label>
+          <label className="form-field">
+            <span>Tag</span>
+            <input name="tag" value={formData.tag} onChange={handleChange} placeholder="e.g., hooks, utility" />
+          </label>
+        </div>
+        <label className="form-field">
+          <span>Code</span>
+          <textarea className="snippet-code-input" name="code" value={formData.code} onChange={handleChange} placeholder="Paste your reusable code here..." rows={7} required />
         </label>
-
-        <input
-          type="url"
-          className="form-control"
-          value={docUrl}
-          onChange={(e) => setDocUrl(e.target.value)}
-          placeholder="https://..."
-        />
+        <label className="form-field">
+          <span>Documentation URL</span>
+          <input type="url" name="docUrl" value={formData.docUrl} onChange={handleChange} placeholder="https://..." />
+        </label>
       </div>
-
-      <div className="mb-3">
-        <label className="form-label">Tag</label>
-
-        <input
-          type="text"
-          className="form-control"
-          value={tag}
-          onChange={(e) => setTag(e.target.value)}
-          placeholder="React"
-        />
-      </div>
-
-      <button type="submit" className="btn btn-primary">
-        Add Snippet
-      </button>
+      <footer className="entity-form-footer">
+        <button type="button" className="form-cancel-button" onClick={onCancel}>Cancel</button>
+        <button type="submit" className="form-submit-button">Save snippet</button>
+      </footer>
     </form>
   );
 }

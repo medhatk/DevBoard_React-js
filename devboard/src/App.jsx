@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import Layout from "./components/Layout";
 import { TaskProvider } from "./context/TaskContext";
 import { SnippetProvider } from "./context/SnippetContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 import Dashboard from "./pages/DashboardPage";
 import TasksPage from "./pages/TasksPage";
@@ -10,6 +11,7 @@ import SnippetsPage from "./pages/SnippetsPage";
 function App() {
   return (
     <BrowserRouter>
+    <ThemeProvider>
     <TaskProvider>
       <SnippetProvider>
       <Routes>
@@ -23,6 +25,7 @@ function App() {
       </Routes>
       </SnippetProvider>
       </TaskProvider>
+    </ThemeProvider>
     </BrowserRouter>
   );
 }
